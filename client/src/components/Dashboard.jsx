@@ -3,7 +3,7 @@ import api from '../services/api';
 import io from 'socket.io-client';
 import '../App.css'; // Make sure to import the CSS
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://pulse-video.onrender.com';
 
 const Dashboard = () => {
   const [videos, setVideos] = useState([]);

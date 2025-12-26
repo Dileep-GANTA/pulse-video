@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Use environment variable if available, otherwise fallback to localhost
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://pulse-video.onrender.com';
 
 const api = axios.create({
   baseURL: API_URL,
