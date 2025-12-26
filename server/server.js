@@ -20,10 +20,17 @@ const authRoutes = require('./routes/authRoutes');
 const videoRoutes = require('./routes/videoRoutes');
 // Middleware
 app.use(express.json()); // Body parser for JSON
+
+
 app.use(cors({
-  origin: CLIENT_URL,
+  origin: [
+    'http://localhost:5173',
+    'https://pulse-video-1.onrender.com' // Your Frontend URL
+  ],
   credentials: true,
-})); // Enable CORS
+  // 
+  allowedHeaders: ['Content-Type', 'x-auth-token'] 
+}));// Enable CORS
 // ... existing imports
 
 // REPLACE app.use(helmet()); WITH THIS:
