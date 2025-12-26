@@ -1,21 +1,32 @@
 // server/middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
 
-module.exports = function(req, res, next) {
-  // 1. Get Token from Header
+// --- 1. PROTECT (Checks if user is logged in) ---
+const protect = (req, res, next) => {
   const token = req.header('x-auth-token');
 
-  // 2. Check if no token
   if (!token) {
     return res.status(401).json({ msg: 'No token, authorization denied' });
   }
 
-  // 3. Verify Token
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded.user;
-    next(); // <--- CRITICAL: Moves to the next step
+    next();
   } catch (err) {
     res.status(401).json({ msg: 'Token is not valid' });
   }
 };
+
+// --- 2. AUTHORIZE (Checks if user has the right role) ---
+const authorize = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({ msg: 'Access denied: Insufficient permissions' });
+    }
+    next();
+  };
+};
+
+// EXPORT BOTH
+module.exports = { protect, authorize };
