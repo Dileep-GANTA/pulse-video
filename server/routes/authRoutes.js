@@ -1,9 +1,10 @@
 // server/routes/auth.js
 // ... existing imports ...
 const express = require('express');
-const router = express.Router(); // 
-
-const User = require('../models/User'); 
+const router = express.Router();
+const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth'); // 
 // ...
 
 // ... existing login/register routes ...
