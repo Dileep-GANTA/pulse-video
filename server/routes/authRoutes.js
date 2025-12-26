@@ -1,6 +1,10 @@
 // server/routes/auth.js
 // ... existing imports ...
-const User = require('../models/User'); // Ensure User model is imported
+const express = require('express');
+const router = express.Router(); // 
+
+const User = require('../models/User'); 
+// ...
 
 // ... existing login/register routes ...
 
