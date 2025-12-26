@@ -46,6 +46,12 @@ const uploadVideo = async (req, res) => {
 const streamVideo = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
+
+    console.log("--- DEBUG STREAM ---");
+    console.log("Video ID:", req.params.id);
+    console.log("Video Object from DB:", video);
+    console.log("Filename we are trying:", video.filename);
+    console.log("--------------------");
     if (!video) return res.status(404).json({ message: 'Video not found' });
 
     // 1. Get the Range Header from the browser
@@ -104,7 +110,7 @@ const deleteVideo = async (req, res) => {
     if (!video) return res.status(404).json({ message: 'Video not found' });
 
     // Check ownership
-    if (video.uploader.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    if (video.user.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
