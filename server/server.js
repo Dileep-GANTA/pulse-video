@@ -29,7 +29,7 @@ app.use(cors({
   ],
   credentials: true,
   // 
-  allowedHeaders: ['Content-Type', 'x-auth-token'] 
+  allowedHeaders: ['Content-Type', 'x-auth-token','Authorization'] 
 }));// Enable CORS
 // ... existing imports
 
