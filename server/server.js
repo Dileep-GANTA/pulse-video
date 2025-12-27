@@ -59,7 +59,7 @@ app.use((err, req, res, next) => {
 // 2. Initialize Socket.io
 const io = new Server(server, {
   cors: {
-    origin: CLIENT_URL, // Allow your Frontend
+    origin:[ CLIENT_URL, 'https://pulse-video-1.onrender.com' ], // Allow your Frontend
     methods: ["GET", "POST"]
   }
 });
