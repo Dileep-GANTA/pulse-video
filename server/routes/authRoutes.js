@@ -9,12 +9,12 @@ const { protect } = require('../middleware/authMiddleware');
 
 // --- 1. REGISTER ROUTE ---
 router.post('/register', async (req, res) => {
-  const { username, email, password, role } = req.body;
+  const { username, password, role } = req.body;
   try {
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ username });
     if (user) return res.status(400).json({ msg: 'User already exists' });
 
-    user = new User({ username, email, password, role });
+    user = new User({ username, password, role });
     await user.save();
 
     const payload = { user: { id: user.id, role: user.role } };
@@ -29,9 +29,9 @@ router.post('/register', async (req, res) => {
 
 // --- 2. LOGIN ROUTE (This was missing!) ---
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
   try {
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ username });
     if (!user) return res.status(400).json({ msg: 'Invalid Credentials' });
 
     const isMatch = await user.matchPassword(password);

@@ -166,4 +166,35 @@ const getMyVideos = async (req, res) => {
   res.json(videos);
 };
 
-module.exports = { uploadVideo, streamVideo, deleteVideo, getMyVideos };
+
+
+// @desc    Update Video Details
+// @route   PUT /api/videos/:id
+const updateVideo = async (req, res) => {
+  try {
+    const video = await Video.findById(req.params.id);
+
+    // 1. Check if video exists
+    if (!video) return res.status(404).json({ message: "Video not found" });
+
+    // 2. Check Ownership (Security)
+    // We compare the video uploader to the current logged-in user
+    if (video.uploader && video.uploader.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(403).json({ message: "You can update only your video!" });
+    }
+
+    // 3. Update the fields
+    // We only update if the user sent new data. Otherwise, keep old data.
+    if (req.body.title) video.title = req.body.title;
+    if (req.body.desc) video.desc = req.body.desc; // Assuming field is named 'desc' or 'description'
+    // if (req.body.imgUrl) video.imgUrl = req.body.imgUrl; // Optional: Update thumbnail
+
+    // 4. Save to DB
+    const updatedVideo = await video.save();
+    
+    res.status(200).json(updatedVideo);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+module.exports = { uploadVideo, streamVideo, deleteVideo, getMyVideos, updateVideo };

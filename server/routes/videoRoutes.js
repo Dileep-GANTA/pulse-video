@@ -4,7 +4,8 @@ const {
   uploadVideo, 
   getMyVideos, 
   streamVideo, 
-  deleteVideo 
+  deleteVideo,
+  updateVideo
 } = require('../controllers/videoController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
@@ -29,4 +30,7 @@ router.get('/stream/:id', streamVideo);
 // Route: DELETE /api/videos/:id
 // Access: Private (Owner only)
 router.delete('/:id', protect, deleteVideo);
+
+
+router.put('/:id', protect, updateVideo);
 module.exports = router;
