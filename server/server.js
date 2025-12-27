@@ -60,7 +60,8 @@ app.use((err, req, res, next) => {
 const io = new Server(server, {
   cors: {
     origin:[ CLIENT_URL, 'https://pulse-video-1.onrender.com' ], // Allow your Frontend
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
   }
 });
 
