@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import api from '../services/api';
 import io from 'socket.io-client';
 import '../App.css'; // Make sure to import the CSS
+import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://pulse-video-api.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const Dashboard = () => {
   const [videos, setVideos] = useState([]);
@@ -109,6 +110,39 @@ const Dashboard = () => {
     }
   };
 
+
+
+
+
+
+  // Function to handle the update
+const handleEdit = async (videoId, currentTitle, currentDesc) => {
+  // 1. Ask user for new details (Simple way)
+  const newTitle = prompt("Enter new title:", currentTitle);
+  if (!newTitle) return; // If user clicked Cancel
+
+  const newDesc = prompt("Enter new description:", currentDesc);
+  
+  try {
+    const token = localStorage.getItem('token');
+    
+    // 2. Send request to Backend
+    await axios.put(
+      `${API_URL}/api/videos/${videoId}`,
+      { title: newTitle, desc: newDesc }, // Data to update
+      { headers: { Authorization: `Bearer ${token}` } } // Auth Token
+    );
+
+    alert("Video updated successfully!");
+    window.location.reload(); // Refresh to see changes
+    // OR: call fetchVideos() if you are in Dashboard
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to update video");
+  }
+};
+
   const filteredVideos = videos.filter((video) => {
     const matchesSearch = video.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === 'all' || video.status === filterStatus;
@@ -207,6 +241,13 @@ const Dashboard = () => {
           <div key={video._id} className="video-card">
             <div className="card-header">
               <h3 className="card-title">{video.title}</h3>
+
+                    <button 
+                onClick={() => handleEdit(video._id, video.title, video.desc)}
+                style={{ marginRight: '10px', background: '#4CAF50', color: 'white' }}
+              >
+                Edit
+              </button>
               <button 
                 onClick={() => handleDelete(video._id)}
                 className="btn-icon"
