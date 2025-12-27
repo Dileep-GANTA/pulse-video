@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import '../App.css'; // Make sure to import the CSS
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://pulse-video-1.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL || 'https://pulse-video-api.onrender.com';
 
 const Dashboard = () => {
   const [videos, setVideos] = useState([]);
@@ -52,7 +52,15 @@ const Dashboard = () => {
         ...v, 
         progress: v.status === 'processing' ? 50 : 100
       }));
-      setVideos(normalized);
+      console.log("SERVER RESPONSE:", res.data); 
+
+      // 👇 SAFETY CHECK: Only set videos if it is actually an array
+      if (Array.isArray(res.data)) {
+        setVideos(res.data);
+      } else {
+        console.error("Data is not an array!", res.data);
+        setVideos([]); // Set empty list to prevent crash
+      }
     } catch (err) {
       console.error('Error fetching videos:', err);
     }
