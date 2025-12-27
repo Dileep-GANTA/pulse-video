@@ -44,7 +44,8 @@ const Dashboard = () => {
     const token = localStorage.getItem('token');
     try {
       const res = await api.get('/api/videos/my-videos', {
-        headers: { Authorization: `Bearer ${token}` }
+
+        headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` }
       });
       const normalized = res.data.map(v => ({
         ...v, 
