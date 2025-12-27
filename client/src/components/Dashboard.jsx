@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import '../App.css'; // Make sure to import the CSS
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://pulse-video-1.onrender.com';
 
 const Dashboard = () => {
   const [videos, setVideos] = useState([]);
