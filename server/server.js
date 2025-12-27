@@ -15,7 +15,7 @@ connectDB();
 
 const app = express();
 const server = http.createServer(app);
-const CLIENT_URL = process.env.CLIENT_URL || "https://pulse-video-1.onrender.com";
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 const authRoutes = require('./routes/authRoutes');
 const videoRoutes = require('./routes/videoRoutes');
 // Middleware

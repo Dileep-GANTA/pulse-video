@@ -104,28 +104,57 @@ const streamVideo = async (req, res) => {
 };
 // @desc    Delete Video (S3)
 // @route   DELETE /api/videos/:id
+// @desc    Delete Video (S3)
+// @route   DELETE /api/videos/:id
 const deleteVideo = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
-    if (!video) return res.status(404).json({ message: 'Video not found' });
-
-    // Check ownership
-    if (video.user.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
-      return res.status(401).json({ message: 'Not authorized' });
+    
+    // 1. Check if video exists
+    if (!video) {
+      return res.status(404).json({ message: 'Video not found' });
     }
 
-    // Delete from S3
-    await s3.send(new DeleteObjectCommand({
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: video.filename
-    }));
+    // --- FIX START: ROBUST OWNERSHIP CHECK ---
+    // We check if 'video.uploader' actually exists.
+    if (video.uploader) {
+       // If video has an owner, check if it matches the current user (or if user is admin)
+       if (video.uploader.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+         return res.status(401).json({ message: 'Not authorized' });
+       }
+    } else {
+       // If video has NO owner (Zombie Video), ONLY allow Admin to delete it
+       // This prevents the "undefined" crash
+       if (req.user.role !== 'admin') {
+         return res.status(401).json({ message: 'Not authorized (Video has no owner)' });
+       }
+    }
+    // --- FIX END ---
 
-    // Delete from DB
+    // 2. Delete from S3 (Safely)
+    // We check both 'filename' and 'key' because different versions of code might have saved it differently
+    const fileKey = video.filename || video.key;
+    
+    if (fileKey) {
+      try {
+        const deleteParams = {
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: fileKey
+        };
+        await s3.send(new DeleteObjectCommand(deleteParams));
+      } catch (s3Err) {
+        console.error("S3 Delete Warning (File might be already gone):", s3Err.message);
+        // We continue deleting from DB even if S3 fails
+      }
+    }
+
+    // 3. Delete from Database
     await video.deleteOne();
+    
     res.json({ message: 'Video removed' });
 
   } catch (error) {
-    console.error(error);
+    console.error("Delete Error:", error);
     res.status(500).json({ message: 'Server Error' });
   }
 };
