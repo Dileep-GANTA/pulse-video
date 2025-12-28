@@ -8,17 +8,20 @@
 **Pulse Video** is a full-stack video streaming application similar to YouTube. It allows users to upload, stream, edit, and manage videos seamlessly. The app utilizes **AWS S3** for scalable video storage and **Socket.io** for real-time interactions.
 
 ---
+Note 📝:**content with titles like('crime', 'virus', 'attack', 'hack', 'violence', 'danger', 'restricted', 'illegal') ⚠️⚠️⚠️ will get flagged everything else is safe.
 
 ## 🚀 Live Demo
 **[Click here to view the Live App](https://pulse-video-1.onrender.com)** *(Replace this link with your actual deployed URL)*
 
 ---
 
+
 ## ✨ Key Features
 
 - **🔐 User Authentication:** Secure Login/Register with JWT (JSON Web Tokens).
 - **📹 Video Upload:** Direct upload to **AWS S3** buckets for high performance.
 - **▶️ Video Streaming:** Efficient video chunking and streaming support.
+- **🔃 content analysis:** content with titles like('crime', 'virus', 'attack', 'hack', 'violence', 'danger', 'restricted', 'illegal') will get flagged everything else is safe.
 - **🛠️ Dashboard:** Users can view, edit titles/descriptions, and delete their own videos.
 - **⚡ Real-time Updates:** **Socket.io** integration for instant UI updates.
 - **🎨 Responsive Design:** Built with React & Vite for a fast, mobile-friendly UI.
